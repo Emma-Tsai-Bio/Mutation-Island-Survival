@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>演化島生存戰 - 微觀基因模擬系統</title>
+    <title>突變危機：波波鳥生存戰 - 微觀基因模擬系統</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -332,7 +332,7 @@
                    <div className="bg-white px-10 py-8 rounded-3xl flex flex-col items-center animate-bounce shadow-2xl">
                       <span className="text-7xl mb-4">🧬</span>
                       <h2 className="text-4xl font-black text-indigo-700">繁衍成功！</h2>
-                      <p className="text-xl text-slate-600 font-bold mt-3">正在進入下一代...</p>
+                      <p className="text-xl text-slate-600 font-bold mt-3">帶著突變與傳承，進入下一代...</p>
                    </div>
                 </div>
               )}
@@ -379,14 +379,14 @@
                 <div className="bg-slate-800 text-white p-6 flex flex-col md:flex-row justify-between items-center relative gap-4 md:gap-0">
                   <div>
                     <h1 className="text-2xl md:text-3xl font-black tracking-wider flex items-center gap-3">
-                      Mutation Island: Survival
+                      Mutation Crisis: Survival
                       {gameState !== 'SETUP' && (
                         <button onClick={() => setShowRulesModal(true)} className="text-sm bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-full font-bold shadow-md transition-colors flex items-center gap-1">
                           <span>📖</span> 規則
                         </button>
                       )}
                     </h1>
-                    <p className="text-slate-300 mt-1 hidden md:block">演化島生存戰 - 微觀基因模擬系統</p>
+                    <p className="text-slate-300 mt-1 hidden md:block">突變危機：波波鳥生存戰 - 微觀基因模擬系統</p>
                   </div>
                   <div className="text-right flex flex-col items-end w-full md:w-auto">
                     <div className="text-lg flex items-baseline gap-2">目前回合：<span className="text-3xl font-bold text-teal-400">{round}</span> <span className="text-sm">/ {MAX_ROUNDS}</span></div>
@@ -401,16 +401,16 @@
 
                 {gameState === 'SETUP' && introStep === 1 && (
                   <div className="p-8 md:p-12 text-center bg-slate-50 animate-fade-in">
-                    <div className="text-6xl mb-6 animate-bounce">🏝️</div>
-                    <h2 className="text-4xl font-black mb-6 text-slate-800 tracking-wider">歡迎來到演化島</h2>
+                    <div className="text-6xl mb-6 animate-bounce">🧬</div>
+                    <h2 className="text-4xl font-black mb-6 text-slate-800 tracking-wider">歡迎來到突變危機</h2>
                     
                     <div className="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-md border border-slate-200 text-left mb-10 text-lg text-slate-700 leading-relaxed">
-                        <p className="mb-4">在浩瀚的汪洋中，有一座與世隔絕的神祕島嶼——<span className="font-bold text-indigo-700">演化島</span>。</p>
-                        <p className="mb-4">這裡氣候極端、危機四伏。有時烈日當空破壞臭氧層，有時人類的核廢料漂流靠岸，甚至還有隱藏在暗處的無情天敵。</p>
-                        <p className="mb-4">你，即將化身為島上的原生生物<span className="font-bold text-teal-600">「波波鳥 🐦」</span>。</p>
-                        <p className="mb-4">你的目標不只是苟活，更是要<span className="font-black text-red-600">將你的基因傳遞下去</span>！在這裡，自然的歲月洗禮或外在的強烈刺激，都可能讓你的基因發生突變。</p>
+                        <p className="mb-4">歡迎來到波波鳥的棲息地！這裡的環境充滿了引發<span className="font-bold text-indigo-700">基因突變</span>的未爆彈。</p>
+                        <p className="mb-4">有時強烈的紫外線會破壞皮膚細胞，有時會誤食含有化學毒素的蟲子，甚至可能遭遇游離輻射的異常照射！</p>
+                        <p className="mb-4">身為一隻波波鳥，你的 DNA 隨時面臨著改變的風險。當突變發生時，你必須敏銳地判斷：</p>
+                        <p className="mb-4">這個突變是打中你的<span className="font-bold text-blue-600">「體細胞」</span>（改變你現在的外貌），還是打中你的<span className="font-bold text-green-600">「生殖細胞」</span>（偷偷潛伏，準備遺傳給下一代）？</p>
                         <p className="font-bold text-slate-800 bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
-                            💡 準備好迎接物競天擇的考驗了嗎？只有適應環境的基因，才能在這裡生生不息...
+                            💡 準備好迎接突變的考驗了嗎？運用你的遺傳學知識，幫助波波鳥家族在危機中繁衍下去吧！
                         </p>
                     </div>
 
@@ -463,7 +463,7 @@
                             ⬅️ 回上一頁
                         </button>
                         <button onClick={startGame} className="bg-teal-600 hover:bg-teal-500 text-white font-black py-4 px-12 rounded-full text-xl shadow-lg transition-transform transform hover:scale-105 active:scale-95">
-                            開始隨機降生 🧬
+                            開始突變挑戰 🧬
                         </button>
                     </div>
                   </div>
@@ -680,7 +680,7 @@
                 {gameState === 'END' && (
                   <div className="h-full flex flex-col justify-center items-center text-center animate-fade-in py-10">
                     <h2 className="text-3xl font-black text-slate-800 mb-2">遊戲結束！</h2>
-                    <p className="text-slate-600 mb-6">經過 6 代的演化，你的最終型態是：</p>
+                    <p className="text-slate-600 mb-6">經過 6 代的繁衍與突變，你的最終型態是：</p>
                     
                     <div className={`p-6 rounded-xl shadow-md w-full mb-6 relative ${pt.bgColor} ${pt.textColor}`}>
                       <div className="text-2xl font-black mb-1">{pt.name}</div>
@@ -706,14 +706,14 @@
                     </div>
                     
                     <button onClick={startGame} className="mt-4 px-10 py-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-full shadow-lg transition-transform hover:scale-105 text-lg">
-                      重新開始新的演化
+                      重新開始新的家族繁衍
                     </button>
                   </div>
                 )}
 
                 {history.length > 0 && gameState !== 'SETUP' && (
                   <div className="p-6 bg-slate-100 border-t-2 border-slate-200">
-                    <h3 className="text-lg font-bold text-slate-700 mb-4">📜 你的演化史紀錄</h3>
+                    <h3 className="text-lg font-bold text-slate-700 mb-4">📜 你的突變與遺傳紀錄</h3>
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm text-left whitespace-nowrap">
                         <thead className="bg-slate-200 text-slate-600 uppercase text-xs">
