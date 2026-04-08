@@ -80,6 +80,7 @@
 
         function App() {
           const [gameState, setGameState] = useState('SETUP'); 
+          const [introStep, setIntroStep] = useState(1); // 1 = 情境故事, 2 = 規則說明
           const [round, setRound] = useState(1);
           const [score, setScore] = useState(0);
           
@@ -398,10 +399,30 @@
                   </div>
                 </div>
 
-                {gameState === 'SETUP' ? (
-                  <div className="p-8 md:p-12 text-center bg-slate-50">
-                    <h2 className="text-3xl font-black mb-2 text-slate-800">歡迎來到演化島</h2>
-                    <p className="text-slate-600 mb-8">準備好體驗基因突變與遺傳的奧秘了嗎？</p>
+                {gameState === 'SETUP' && introStep === 1 && (
+                  <div className="p-8 md:p-12 text-center bg-slate-50 animate-fade-in">
+                    <div className="text-6xl mb-6 animate-bounce">🏝️</div>
+                    <h2 className="text-4xl font-black mb-6 text-slate-800 tracking-wider">歡迎來到演化島</h2>
+                    
+                    <div className="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-md border border-slate-200 text-left mb-10 text-lg text-slate-700 leading-relaxed">
+                        <p className="mb-4">在浩瀚的汪洋中，有一座與世隔絕的神祕島嶼——<span className="font-bold text-indigo-700">演化島</span>。</p>
+                        <p className="mb-4">這裡氣候極端、危機四伏。有時烈日當空破壞臭氧層，有時人類的核廢料漂流靠岸，甚至還有隱藏在暗處的無情天敵。</p>
+                        <p className="mb-4">你，即將化身為島上的原生生物<span className="font-bold text-teal-600">「波波鳥 🐦」</span>。</p>
+                        <p className="mb-4">你的目標不只是苟活，更是要<span className="font-black text-red-600">將你的基因傳遞下去</span>！在這裡，自然的歲月洗禮或外在的強烈刺激，都可能讓你的基因發生突變。</p>
+                        <p className="font-bold text-slate-800 bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+                            💡 準備好迎接物競天擇的考驗了嗎？只有適應環境的基因，才能在這裡生生不息...
+                        </p>
+                    </div>
+
+                    <button onClick={() => setIntroStep(2)} className="bg-indigo-600 hover:bg-indigo-500 text-white font-black py-4 px-12 rounded-full text-xl shadow-lg transition-transform transform hover:scale-105 active:scale-95">
+                      查看生存守則 ➡️
+                    </button>
+                  </div>
+                )}
+
+                {gameState === 'SETUP' && introStep === 2 && (
+                  <div className="p-8 md:p-12 text-center bg-slate-50 animate-fade-in">
+                    <h2 className="text-3xl font-black mb-6 text-slate-800">遊戲規則與準備</h2>
                     
                     <div className="text-left bg-white p-6 md:p-8 rounded-2xl mb-10 shadow-md border border-slate-200 max-w-2xl mx-auto">
                       <h3 className="font-black text-xl mb-4 text-indigo-800 border-b-2 border-indigo-100 pb-2 flex items-center gap-2">
@@ -437,11 +458,18 @@
                       </ul>
                     </div>
 
-                    <button onClick={startGame} className="bg-teal-600 hover:bg-teal-500 text-white font-black py-4 px-12 rounded-full text-2xl shadow-lg transition-transform transform hover:scale-105 active:scale-95">
-                      開始隨機降生
-                    </button>
+                    <div className="flex flex-col md:flex-row justify-center gap-4">
+                        <button onClick={() => setIntroStep(1)} className="bg-slate-300 hover:bg-slate-400 text-slate-700 font-bold py-4 px-8 rounded-full text-xl shadow transition-transform active:scale-95">
+                            ⬅️ 回上一頁
+                        </button>
+                        <button onClick={startGame} className="bg-teal-600 hover:bg-teal-500 text-white font-black py-4 px-12 rounded-full text-xl shadow-lg transition-transform transform hover:scale-105 active:scale-95">
+                            開始隨機降生 🧬
+                        </button>
+                    </div>
                   </div>
-                ) : (
+                )}
+
+                {gameState !== 'SETUP' && gameState !== 'END' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-b-2 border-slate-100">
                     
                     <div className="p-6 bg-slate-50">
@@ -645,45 +673,45 @@
                         </div>
                       )}
 
-                      {gameState === 'END' && (
-                        <div className="h-full flex flex-col justify-center items-center text-center animate-fade-in">
-                          <h2 className="text-3xl font-black text-slate-800 mb-2">遊戲結束！</h2>
-                          <p className="text-slate-600 mb-6">經過 6 代的演化，你的最終型態是：</p>
-                          
-                          <div className={`p-6 rounded-xl shadow-md w-full mb-6 relative ${pt.bgColor} ${pt.textColor}`}>
-                            <div className="text-2xl font-black mb-1">{pt.name}</div>
-                            <div className="text-3xl tracking-widest mt-2 flex justify-center gap-2">
-                               {somatic.map((a, i) => <AlleleUI key={i} allele={a} />)}
-                            </div>
-                          </div>
-
-                          <div className="bg-slate-100 p-6 rounded-2xl w-full border border-slate-200 shadow-inner mb-6 text-left max-w-md">
-                              <h3 className="font-bold text-slate-700 mb-4 border-b border-slate-300 pb-2 text-center text-xl">結算成績</h3>
-                              <div className="flex justify-between items-center mb-2 text-lg">
-                                  <span className="text-slate-600 font-bold">生存總分</span>
-                                  <span className="font-black text-teal-600">{score} 分</span>
-                              </div>
-                              <div className="flex justify-between items-center mb-4 text-lg">
-                                  <span className="text-slate-600 font-bold">操作錯誤扣分 ({errorCount} 次)</span>
-                                  <span className="font-black text-red-500">- {errorCount * 5} 分</span>
-                              </div>
-                              <div className="flex justify-between items-center border-t-2 border-slate-300 pt-4 text-2xl">
-                                  <span className="font-black text-slate-800">最終得分</span>
-                                  <span className="font-black text-indigo-700 text-4xl">{score - (errorCount * 5)} 分</span>
-                              </div>
-                          </div>
-                          
-                          <button onClick={startGame} className="mt-4 px-10 py-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-full shadow-lg transition-transform hover:scale-105 text-lg">
-                            重新開始新的演化
-                          </button>
-                        </div>
-                      )}
-
                     </div>
                   </div>
                 )}
 
-                {history.length > 0 && (
+                {gameState === 'END' && (
+                  <div className="h-full flex flex-col justify-center items-center text-center animate-fade-in py-10">
+                    <h2 className="text-3xl font-black text-slate-800 mb-2">遊戲結束！</h2>
+                    <p className="text-slate-600 mb-6">經過 6 代的演化，你的最終型態是：</p>
+                    
+                    <div className={`p-6 rounded-xl shadow-md w-full mb-6 relative ${pt.bgColor} ${pt.textColor}`}>
+                      <div className="text-2xl font-black mb-1">{pt.name}</div>
+                      <div className="text-3xl tracking-widest mt-2 flex justify-center gap-2">
+                         {somatic.map((a, i) => <AlleleUI key={i} allele={a} />)}
+                      </div>
+                    </div>
+
+                    <div className="bg-slate-100 p-6 rounded-2xl w-full border border-slate-200 shadow-inner mb-6 text-left max-w-md">
+                        <h3 className="font-bold text-slate-700 mb-4 border-b border-slate-300 pb-2 text-center text-xl">結算成績</h3>
+                        <div className="flex justify-between items-center mb-2 text-lg">
+                            <span className="text-slate-600 font-bold">生存總分</span>
+                            <span className="font-black text-teal-600">{score} 分</span>
+                        </div>
+                        <div className="flex justify-between items-center mb-4 text-lg">
+                            <span className="text-slate-600 font-bold">操作錯誤扣分 ({errorCount} 次)</span>
+                            <span className="font-black text-red-500">- {errorCount * 5} 分</span>
+                        </div>
+                        <div className="flex justify-between items-center border-t-2 border-slate-300 pt-4 text-2xl">
+                            <span className="font-black text-slate-800">最終得分</span>
+                            <span className="font-black text-indigo-700 text-4xl">{score - (errorCount * 5)} 分</span>
+                        </div>
+                    </div>
+                    
+                    <button onClick={startGame} className="mt-4 px-10 py-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-full shadow-lg transition-transform hover:scale-105 text-lg">
+                      重新開始新的演化
+                    </button>
+                  </div>
+                )}
+
+                {history.length > 0 && gameState !== 'SETUP' && (
                   <div className="p-6 bg-slate-100 border-t-2 border-slate-200">
                     <h3 className="text-lg font-bold text-slate-700 mb-4">📜 你的演化史紀錄</h3>
                     <div className="overflow-x-auto">
