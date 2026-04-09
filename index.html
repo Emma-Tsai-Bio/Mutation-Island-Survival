@@ -38,7 +38,7 @@
           { id: 'e5', type: 'env', name: '核輻射外洩', desc: '暴露於高能輻射！生殖細胞的一個 A 變成突變型。', target: 'germ', from: 'A', to: 'A_mut' },
           { id: 'e6', type: 'env', name: '核輻射外洩', desc: '暴露於高能輻射！生殖細胞的一個 a 變成突變型。', target: 'germ', from: 'a', to: 'a_mut' },
           { id: 'e7', type: 'env', name: '亞硝酸鹽中毒', desc: '吃到劇毒蟲子！體細胞 (腸胃) 的一個 a 變成突變型。', target: 'somatic', from: 'a', to: 'a_mut' },
-          { id: 'e8', type: 'env', name: '亞硝酸鹽中毒', desc: '吃到劇毒蟲子！體細胞 (腸胃) 的一個 A 變成突變型. target: 'somatic', from: 'A', to: 'A_mut' },
+          { id: 'e8', type: 'env', name: '亞硝酸鹽中毒', desc: '吃到劇毒蟲子！體細胞 (腸胃) 的一個 A 變成突變型。', target: 'somatic', from: 'A', to: 'A_mut' }, // ← 就是這行剛剛漏了引號！
           { id: 'e9', type: 'env', name: '未知病毒感染', desc: '病毒嵌入DNA！生殖細胞的一個 A 變成突變型。', target: 'germ', from: 'A', to: 'A_mut' },
           { id: 'e10', type: 'env', name: '未知病毒感染', desc: '病毒嵌入DNA！體細胞的一個 a 變成突變型。', target: 'somatic', from: 'a', to: 'a_mut' }
         ];
@@ -343,13 +343,13 @@
                         <ol className="list-decimal pl-5 space-y-2">
                           <li>每回合會抽取一張「事件卡」，可能引發自然或外在突變。</li>
                           <li>若卡片指示的基因你身上沒有，<span className="font-bold text-green-600">那就幸運逃過一劫，不用改變！</span></li>
-                          <li>根據突變後的「體細胞」重新判定目前的表徵與生存加分。</li>
+                          <li>根據突變後的「體細胞」重新判定目前的表徵與加分。</li>
                           <li>使用「生殖細胞」進行減數分裂，保留一顆配子給自己，另一顆傳給右邊同學。</li>
                           <li>結合自己與左邊同學傳來的配子，誕生下一代！</li>
                         </ol>
                       </div>
                       <p className="text-sm md:text-base text-slate-600 mb-4 font-bold bg-yellow-50 p-3 rounded-lg border border-yellow-200">
-                        ⚠️ 表徵判定規則：A* 和 a* 代表突變基因。隱性突變 (a*) 必須湊齊一對 (a*a*) 才會發病表現出來喔！
+                        ⚠️ 表徵判定：A* 和 a* 代表突變基因。隱性突變 (a*) 必須湊齊一對 (a*a*) 才會發病喔！
                       </p>
                       <ul className="space-y-3 text-slate-700">
                           {PHENOTYPE_OPTIONS.map(opt => (
@@ -582,7 +582,7 @@
                           <h3 className="text-2xl font-black text-slate-800 mb-8">階段 2：準備減數分裂</h3>
                           
                           {!isPhenotypeConfirmed ? (
-                             <div className="w-full py-8 bg-slate-200 text-slate-600 font-bold rounded-2xl shadow-inner text-xl text-center border-2 border-dashed border-slate-300">
+                             <div className="w-full py-8 bg-slate-200 text-slate-600 font-bold rounded-2xl shadow-inner text-xl text-center border-2 border-dashed border-slate-400">
                                👈 經歷突變事件後，請再次判定左側的表徵狀態！<br/><span className="text-base text-slate-500 mt-2 block">(即使突變在生殖細胞，也要確認自己的體細胞喔)</span>
                              </div>
                           ) : (
