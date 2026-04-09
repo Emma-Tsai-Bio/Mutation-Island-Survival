@@ -25,6 +25,7 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
+        // --- 遊戲卡牌資料庫 ---
         const CARD_DECK = [
           ...Array(16).fill({ id: 'safe', type: 'natural', name: '平靜的歲月', desc: '平安過了一年，抄寫無誤，沒有突變。', target: 'none' }),
           { id: 'n1', type: 'natural', name: '罕見自然突變', desc: '體細胞突變！將體細胞中的一個 A 突變。', target: 'somatic', from: 'A', to: 'A_mut' },
@@ -38,7 +39,7 @@
           { id: 'e5', type: 'env', name: '核輻射外洩', desc: '暴露於高能輻射！生殖細胞的一個 A 變成突變型。', target: 'germ', from: 'A', to: 'A_mut' },
           { id: 'e6', type: 'env', name: '核輻射外洩', desc: '暴露於高能輻射！生殖細胞的一個 a 變成突變型。', target: 'germ', from: 'a', to: 'a_mut' },
           { id: 'e7', type: 'env', name: '亞硝酸鹽中毒', desc: '吃到劇毒蟲子！體細胞 (腸胃) 的一個 a 變成突變型。', target: 'somatic', from: 'a', to: 'a_mut' },
-          { id: 'e8', type: 'env', name: '亞硝酸鹽中毒', desc: '吃到劇毒蟲子！體細胞 (腸胃) 的一個 A 變成突變型。', target: 'somatic', from: 'A', to: 'A_mut' }, // ← 就是這行剛剛漏了引號！
+          { id: 'e8', type: 'env', name: '亞硝酸鹽中毒', desc: '吃到劇毒蟲子！體細胞 (腸胃) 的一個 A 變成突變型。', target: 'somatic', from: 'A', to: 'A_mut' },
           { id: 'e9', type: 'env', name: '未知病毒感染', desc: '病毒嵌入DNA！生殖細胞的一個 A 變成突變型。', target: 'germ', from: 'A', to: 'A_mut' },
           { id: 'e10', type: 'env', name: '未知病毒感染', desc: '病毒嵌入DNA！體細胞的一個 a 變成突變型。', target: 'somatic', from: 'a', to: 'a_mut' }
         ];
@@ -46,10 +47,10 @@
         const MAX_ROUNDS = 6;
 
         const PHENOTYPE_OPTIONS = [
-          { name: '冰皮皮', desc: '(顯性遺傳疾病)', examples: 'A*A, A*a, A*A*, A*a*' },
-          { name: '岩皮皮', desc: '(隱性遺傳疾病)', examples: 'a*a*' },
-          { name: '紫皮皮', desc: '(正常隱性)', examples: 'aa, a*a (帶因者)' },
-          { name: '粉皮皮', desc: '(正常顯性)', examples: 'AA, Aa' }
+          { name: '冰皮皮', desc: '(顯性遺傳疾病)', examples: 'A*A, A*a, A*A*, A*a*', isDisease: true },
+          { name: '岩皮皮', desc: '(隱性遺傳疾病)', examples: 'a*a*', isDisease: true },
+          { name: '紫皮皮', desc: '(正常隱性或帶因者)', examples: 'aa, a*a', isDisease: false },
+          { name: '粉皮皮', desc: '(正常顯性)', examples: 'AA, Aa', isDisease: false }
         ];
 
         const getPhenotype = (alleles) => {
@@ -64,6 +65,8 @@
           const order = { 'A': 1, 'A_mut': 2, 'a': 3, 'a_mut': 4 };
           return [...arr].sort((x, y) => order[x] - order[y]);
         };
+
+        const formatAllele = (a) => (a && a.includes('mut') ? (a[0] + '*') : (a || '?'));
 
         const AlleleUI = ({ allele }) => {
           if (!allele) return <span className="font-bold">?</span>;
@@ -286,8 +289,8 @@
                   somaticAfter: somatic, 
                   germAfter: germ,       
                   meiosisSource: '生殖細胞',
-                  passed: passedGamete,
-                  received: received,
+                  // 根據 germAfter 計算可產生的配子種類
+                  gameteTypes: Array.from(new Set(germ.map(formatAllele))),
                   nextGenotype: nextGenotype,
                   nextPhenotype: nextPt.name
                 };
@@ -349,13 +352,13 @@
                         </ol>
                       </div>
                       <p className="text-sm md:text-base text-slate-600 mb-4 font-bold bg-yellow-50 p-3 rounded-lg border border-yellow-200">
-                        ⚠️ 表徵判定：A* 和 a* 代表突變基因。隱性突變 (a*) 必須湊齊一對 (a*a*) 才會發病喔！
+                        ⚠️ 表徵判定規則：A* 和 a* 代表突變基因。隱性突變 (a*) 必須湊齊一對 (a*a*) 才會發病表現出來喔！
                       </p>
                       <ul className="space-y-3 text-slate-700">
                           {PHENOTYPE_OPTIONS.map(opt => (
                               <li key={opt.name} className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
                                   <div className="font-black text-lg md:text-xl text-slate-800 flex items-baseline gap-2">
-                                    {opt.name} <span className="text-sm font-bold text-indigo-600">{opt.desc}</span>
+                                    {opt.name} <span className={`text-sm font-bold ${opt.isDisease ? 'text-red-600' : 'text-indigo-600'}`}>{opt.desc}</span>
                                   </div>
                                   <div className="md:ml-auto text-sm text-slate-500 font-bold">包含基因型：</div>
                                   <div className="font-mono text-base md:text-lg bg-indigo-100 text-indigo-900 px-3 py-1 rounded shadow-inner text-center">
@@ -428,7 +431,7 @@
                         <ol className="list-decimal pl-6 space-y-2">
                           <li>每回合會抽取一張「事件卡」，可能引發自然或外在突變。</li>
                           <li>若卡片指示的基因你身上沒有，<span className="font-bold text-green-600">那就幸運逃過一劫，不用改變！</span></li>
-                          <li>根據突變後的「體細胞」重新判定目前的表徵與生存加分。</li>
+                          <li>根據突變後的「體細胞」重新判定目前的表徵與加分。</li>
                           <li>使用「生殖細胞」進行減數分裂，保留一顆配子給自己，另一顆傳給右邊同學。</li>
                           <li>結合自己與左邊同學傳來的配子，誕生下一代！</li>
                         </ol>
@@ -441,7 +444,7 @@
                           {PHENOTYPE_OPTIONS.map(opt => (
                               <li key={opt.name} className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100 border border-slate-100 active:scale-95 transition-transform">
                                   <div className="font-black text-lg md:text-xl text-slate-800 flex items-baseline gap-2">
-                                    {opt.name} <span className="text-sm font-bold text-indigo-600">{opt.desc}</span>
+                                    {opt.name} <span className={`text-sm font-bold ${opt.isDisease ? 'text-red-600' : 'text-indigo-600'}`}>{opt.desc}</span>
                                   </div>
                                   <div className="md:ml-auto text-sm text-slate-500 font-bold">包含基因型：</div>
                                   <div className="font-mono text-base md:text-lg bg-indigo-100 text-indigo-900 px-4 py-1.5 rounded shadow-inner text-center border border-indigo-200">
@@ -468,7 +471,7 @@
                     
                     <div className="p-6 md:p-8 bg-slate-50 border-r border-slate-200">
                       <h3 className="text-xl font-bold text-slate-700 mb-6 border-b-2 border-slate-200 pb-3 flex items-center">
-                        🐦 你的皮皮狀態 <span className="ml-auto text-sm bg-slate-800 text-white px-4 py-1.5 rounded-full">-- 第 {round} 代</span>
+                        🌸 你的皮皮狀態 <span className="ml-auto text-sm bg-slate-800 text-white px-4 py-1.5 rounded-full">-- 第 {round} 代</span>
                       </h3>
                       
                       {!isPhenotypeConfirmed ? (
@@ -478,7 +481,7 @@
                              {PHENOTYPE_OPTIONS.map(opt => (
                                <button key={opt.name} onClick={() => handleJudgePhenotype(opt.name)} className="py-4 px-2 bg-white rounded-2xl border-2 border-slate-300 hover:border-indigo-500 hover:bg-indigo-50 active:bg-indigo-100 active:scale-95 active:border-indigo-600 shadow-sm transition-all flex flex-col items-center justify-center border border-slate-200">
                                  <span className="font-black text-slate-700 text-xl">{opt.name}</span>
-                                 <span className="text-sm text-indigo-600 font-bold mt-2">{opt.desc}</span>
+                                 <span className={`text-sm font-bold mt-2 ${opt.isDisease ? 'text-red-600' : 'text-indigo-600'}`}>{opt.desc}</span>
                                </button>
                              ))}
                           </div>
@@ -582,7 +585,7 @@
                           <h3 className="text-2xl font-black text-slate-800 mb-8">階段 2：準備減數分裂</h3>
                           
                           {!isPhenotypeConfirmed ? (
-                             <div className="w-full py-8 bg-slate-200 text-slate-600 font-bold rounded-2xl shadow-inner text-xl text-center border-2 border-dashed border-slate-400">
+                             <div className="w-full py-8 bg-slate-200 text-slate-600 font-bold rounded-2xl shadow-inner text-xl text-center border-2 border-dashed border-slate-300">
                                👈 經歷突變事件後，請再次判定左側的表徵狀態！<br/><span className="text-base text-slate-500 mt-2 block">(即使突變在生殖細胞，也要確認自己的體細胞喔)</span>
                              </div>
                           ) : (
@@ -716,13 +719,12 @@
                             <th className="px-5 py-3 font-black border-r border-slate-300">當代表徵</th>
                             <th className="px-5 py-3 font-black border-r border-slate-300">遭遇事件 & 突變</th>
                             <th className="px-5 py-3 bg-yellow-200 text-yellow-900 font-black border-r border-slate-300">突變後細胞 (體/生)</th>
-                            <th className="px-5 py-3 font-black border-r border-slate-300">減數分裂與傳遞</th>
+                            <th className="px-5 py-3 font-black border-r border-slate-300">減數分裂</th>
                             <th className="px-5 py-3 font-black rounded-tr-xl">下一代基因 & 表徵</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-200 border-b border-slate-200">
                           {history.map((h, i) => {
-                            const formatAllele = (a) => (a && a.includes('mut') ? '*' : '') + (a ? a[0] : '?');
                             return (
                             <tr key={i} className="hover:bg-slate-50 transition-colors">
                               <td className="px-5 py-4 font-black text-slate-800 text-center text-lg border-r border-slate-200">{h.round}</td>
@@ -738,7 +740,7 @@
                               </td>
                               <td className="px-5 py-4 border-r border-slate-200">
                                 <div className="text-xs text-green-700 font-bold mb-1">來源: {h.meiosisSource}</div>
-                                <div className="font-mono text-base font-bold text-slate-700">傳: {formatAllele(h.passed)} / 收: {formatAllele(h.received)}</div>
+                                <div className="text-sm font-bold text-slate-700">配子種類: {h.gameteTypes.join(', ')}</div>
                               </td>
                               <td className="px-5 py-4">
                                 <div className="font-mono font-black text-indigo-700 text-lg">[{h.nextGenotype.map(formatAllele).join('')}]</div>
